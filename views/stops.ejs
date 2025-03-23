@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista przystanków</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+        input[type="text"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script>
+        function filterStops() {
+            let searchInput = document.getElementById('search').value.toLowerCase();
+            let stops = document.getElementsByTagName('li');
+            
+            for (let i = 0; i < stops.length; i++) {
+                let text = stops[i].innerText.toLowerCase();
+                if (text.includes(searchInput)) {
+                    stops[i].style.display = "block";
+                } else {
+                    stops[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Wybierz przystanek</h1>
+    <input type="text" id="search" onkeyup="filterStops()" placeholder="Szukaj przystanku...">
+    <ul>
+        <% stops.forEach(stop => { %>
+            <li><a href="/departures/<%= stop.number %>"><%= stop.name %> (<%= stop.number %>)</a></li>
+        <% }) %>
+    </ul>
+</body>
+</html>

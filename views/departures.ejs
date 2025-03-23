@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odjazdy - <%= stop.stop_name %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .blinking {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+    </style>
+    <script>
+        function refreshDepartures() {
+            fetch(window.location.href)
+                .then(response => response.text())
+                .then(html => {
+                    document.body.innerHTML = new DOMParser().parseFromString(html, 'text/html').body.innerHTML;
+                })
+                .catch(error => console.error('Błąd odświeżania odjazdów!'));
+        }
+        setInterval(refreshDepartures, 20000);
+    </script>
+</head>
+<body>
+    <h1>Odjazdy z przystanku <%= stop.stop_name %> (<%= stop.stop_number %>)</h1>
+    <table>
+        <tr>
+            <th>Linia</th>
+            <th>Kierunek</th>
+            <th>Odjazd</th>
+        </tr>
+        <% stop.departures.forEach(dep => { %>
+            <tr>
+                <td><%= dep.line_number %></td>
+                <td><%= dep.direction %></td>
+                <td>
+                    <% if (dep.time_real !== null) { %>
+                        <% if (dep.time_real === 0) { %>
+                            <span class="blinking">&gt;&gt;&gt;</span>
+                        <% } else { %>
+                            za <%= dep.time_real %> min
+                        <% } %>
+                    <% } else { %>
+                        <%= dep.time_scheduled %>
+                    <% } %>
+                </td>
+            </tr>
+        <% }) %>
+    </table>
+    <br>
+    <a href="/">Wróć do listy przystanków</a>
+</body>
+</html>

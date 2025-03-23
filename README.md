@@ -1,0 +1,1 @@
+echo "# odjazdy_na_zywo_zditm_szczecin"
