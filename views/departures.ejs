@@ -39,8 +39,8 @@
                     <a href="/" class="btn btn-primary" role="button"><i class="bi bi-arrow-bar-left"></i> Powrót do listy przystanków</a>
                 </div>
                 <h3 class="text-center mb-3">Odjazdy: <%= stop.stop_name %> (<%= stop.stop_number %>) <% if (stop.request_stop) { %> <span class="fw-bold">Na żądanie</span> <% } %></h3>
-                <table class="table table-bordered">
-                    <tr>
+                <table class="table table-bordered table-hover">
+                    <tr class="table-secondary">
                         <th>Linia</th>
                         <th>Kierunek</th>
                         <th>Odjazd</th>
