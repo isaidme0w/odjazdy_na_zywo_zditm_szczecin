@@ -4,28 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista przystanków</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        li {
-            margin: 5px 0;
-        }
-        input[type="text"] {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 8px;
-            margin-bottom: 10px;
-        }
-    </style>
     <script>
         function filterStops() {
             let searchInput = document.getElementById('search').value.toLowerCase();
-            let stops = document.getElementsByTagName('li');
+            let stops = document.getElementsByClassName('stops');
             
             for (let i = 0; i < stops.length; i++) {
                 let text = stops[i].innerText.toLowerCase();
@@ -37,14 +19,35 @@
             }
         }
     </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-    <h1>Wybierz przystanek</h1>
-    <input type="text" id="search" onkeyup="filterStops()" placeholder="Szukaj przystanku...">
-    <ul>
-        <% stops.forEach(stop => { %>
-            <li><a href="/departures/<%= stop.number %>"><%= stop.name %> (<%= stop.number %>)</a></li>
-        <% }) %>
-    </ul>
+    <div class="container-md">
+        <div class="row py-4">
+            <div class="col">
+                <h1>Komunikacja miejska w Szczecinie</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <h3 class="mb-3 text-center">Filtruj Przystanki</h3>
+                <div class="input-group flex-nowrap mb-3">
+                    <span class="input-group-text" id="addon-wrapping"><i class="bi bi-funnel-fill"></i></span>
+                    <input type="text" id="search" onkeyup="filterStops()" class="form-control" placeholder="Nazwa przystanku..." aria-label="Nazwa przystanku..." aria-describedby="addon-wrapping">
+                </div>
+            </div>
+            <div class="col-md-8 overflow-auto">
+                <h3 class="mb-3 text-center">Lista przystanków</h3>
+                <div class="list-group">
+                    <% stops.forEach(stop => { %>
+                        <a href="/departures/<%= stop.number %>" class="list-group-item list-group-item-action stops"><%= stop.name %> (<%= stop.number %>) <% if (stop.request_stop) { %> <span class="fw-bold">Na żądanie</span> <% } %></a>
+                    <% }) %>
+                <div class="list-group">
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>
 </html>
