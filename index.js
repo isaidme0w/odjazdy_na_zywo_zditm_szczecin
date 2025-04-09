@@ -24,8 +24,10 @@ app.get('/', async (req, res) => {
             }
         });
         res.render('stops', { stops });
+        console.log(`Successfuly fetched stops.`)
     } catch (error) {
         res.status(500).send('Błąd podczas pobierania listy przystanków');
+        console.log(`Could not fetch stops!`)
     }
 });
 
@@ -40,8 +42,10 @@ app.get('/departures/:stopNumber', async (req, res) => {
             stopInfo.request_stop = false;
         }
         res.render('departures', { stop: stopInfo });
+        console.log(`Successfully fetched departures for '${stopInfo.stop_name}'`)
     } catch (error) {
         res.status(500).send('Błąd podczas pobierania odjazdów dla przystanku');
+        console.log(`Could not fetch departures!`)
     }
 });
 
