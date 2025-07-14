@@ -18,6 +18,7 @@ Dane pochodzą bezpośrednio z serwerów [Zarządu Dróg i Transportu Miejskiego
     `npm install`
 
     Pobiera wszystkie potrzebne biblioteki użyte w projekcie
-3. Teraz należy wpisać komendę `node index.js`. W tym momencie serwer został uruchomiony i można korzystać z aplikacji.
-4. W przeglądarce należy wpisać w pole wyszukowania **Adres IP komputera** lub jeżeli lokalnie na komputerze jesteśmy to możemy użyć adresu `localhost` wraz z portem `3000`.
+3. Teraz należy zmienić nazwę pliku z `example.env` na `.env`. Ewentualnie w pliku można zmienić adres ip i port serwera, a także root directory. Ale serwer też działa z wartościami domyślnymi.
+4. Teraz należy wpisać komendę `node index.js`. W tym momencie serwer został uruchomiony i można korzystać z aplikacji.
+5. W przeglądarce należy wpisać w pole wyszukowania **Adres IP komputera** lub jeżeli lokalnie na komputerze jesteśmy to możemy użyć adresu `localhost` wraz z portem `3000`.
     Przykłady: `http://localhost:3000` lub `http://192.168.1.10:3000`.
