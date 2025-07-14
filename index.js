@@ -49,7 +49,7 @@ app.get(`${ROOT_DIR}`, async (req, res) => {
     }
 });
 
-app.get(`${ROOT_DIR}/departures/:stopNumber`, async (req, res) => {
+app.get(`${ROOT_DIR}departures/:stopNumber`, async (req, res) => {
     const { stopNumber } = req.params;
     const short_number = stopNumber.slice(-2);
     try {
