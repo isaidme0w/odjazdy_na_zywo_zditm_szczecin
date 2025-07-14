@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odjazdy - <%= stop.stop_name %> (<%= stop.stop_number %>)</title>
+    <title>Odjazdy - <%= stop.stop_name %> (<%= short_number %>)</title>
     <script>
         function refreshDepartures() {
             fetch(window.location.href)
@@ -39,7 +39,7 @@
                 <div class="d-flex justify-content-center mb-3">
                     <a href="<%= root %>" class="btn btn-primary" role="button"><i class="bi bi-arrow-bar-left"></i> Powrót do listy przystanków</a>
                 </div>
-                <h3 class="text-center mb-3">Odjazdy: <%= stop.stop_name %> (<%= stop.stop_number %>) <% if (stop.request_stop) { %> <span class="fw-bold">Na żądanie</span> <% } %></h3>
+                <h3 class="text-center mb-3">Odjazdy: <%= stop.stop_name %> (<%= short_number %>) <% if (stop.request_stop) { %> <span class="fw-bold">Na żądanie</span> <% } %></h3>
                 <table class="table table-bordered table-hover">
                     <tr class="table-secondary">
                         <th>Linia</th>

@@ -32,9 +32,11 @@ app.get(`${ROOT_DIR}`, async (req, res) => {
         const response = await axios.get(`${BASE_URL}/stops`);
         const stops = response.data.data.map(stop => {
             stopsData[stop.number] = { name: stop.name, request_stop: stop.request_stop };
+            const short_number = String(stop.number).slice(-2);
             return {
                 id: stop.id,
                 number: stop.number,
+                short_number,
                 name: stop.name,
                 request_stop: stop.request_stop
             }
@@ -49,6 +51,7 @@ app.get(`${ROOT_DIR}`, async (req, res) => {
 
 app.get(`${ROOT_DIR}/departures/:stopNumber`, async (req, res) => {
     const { stopNumber } = req.params;
+    const short_number = stopNumber.slice(-2);
     try {
         const response = await axios.get(`${BASE_URL}/displays/${stopNumber}`);
         const stopInfo = response.data;
@@ -57,8 +60,8 @@ app.get(`${ROOT_DIR}/departures/:stopNumber`, async (req, res) => {
         } else {
             stopInfo.request_stop = false;
         }
-        res.render('departures', { stop: stopInfo });
-        console.log(constructLog(`Successfully fetched departures for '${stopInfo.stop_name}'`, req));
+        res.render('departures', { stop: stopInfo, short_number });
+        console.log(constructLog(`Successfully fetched departures for '${stopInfo.stop_name} (${short_number})'`, req));
     } catch (error) {
         res.status(500).send('Błąd podczas pobierania odjazdów dla przystanku');
         console.log(constructLog(`Could not fetch departures!`, req));
