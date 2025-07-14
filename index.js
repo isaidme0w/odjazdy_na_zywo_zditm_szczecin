@@ -1,17 +1,33 @@
 const express = require('express');
 const axios = require('axios');
+require('dotenv').config();
 
 const app = express();
-const PORT = 3000;
-const BASE_URL = 'https://www.zditm.szczecin.pl/api/v1';
+const PORT = process.env.APP_PORT;
+const IP_A = process.env.APP_IP;
+const BASE_URL = process.env.APP_BASE_URL;
+const ROOT_DIR = process.env.APP_ROOT_DIR;
+
+app.locals.root = ROOT_DIR;
 
 app.use(express.json());
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
+function addZero(i) {
+    if (i < 10) {i = "0" + i}
+    return i;
+}
+
+function constructLog(message, req) {
+    const d = new Date();
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    return "[" + d.getFullYear() + "-" + addZero(d.getMonth() + 1) + "-" + addZero(d.getDate()) + " " + addZero(d.getHours()) + ":" + addZero(d.getMinutes()) + ":" + addZero(d.getSeconds()) + "] (" + ip + ") " + message;
+}
+
 let stopsData = {};
 
-app.get('/', async (req, res) => {
+app.get(`${ROOT_DIR}`, async (req, res) => {
     try {
         const response = await axios.get(`${BASE_URL}/stops`);
         const stops = response.data.data.map(stop => {
@@ -24,14 +40,14 @@ app.get('/', async (req, res) => {
             }
         });
         res.render('stops', { stops });
-        console.log(`Successfuly fetched stops.`)
+        console.log(constructLog(`Successfuly fetched stops.`, req));
     } catch (error) {
         res.status(500).send('Błąd podczas pobierania listy przystanków');
-        console.log(`Could not fetch stops!`)
+        console.log(constructLog(`Could not fetch stops!`, req));
     }
 });
 
-app.get('/departures/:stopNumber', async (req, res) => {
+app.get(`${ROOT_DIR}/departures/:stopNumber`, async (req, res) => {
     const { stopNumber } = req.params;
     try {
         const response = await axios.get(`${BASE_URL}/displays/${stopNumber}`);
@@ -42,13 +58,13 @@ app.get('/departures/:stopNumber', async (req, res) => {
             stopInfo.request_stop = false;
         }
         res.render('departures', { stop: stopInfo });
-        console.log(`Successfully fetched departures for '${stopInfo.stop_name}'`)
+        console.log(constructLog(`Successfully fetched departures for '${stopInfo.stop_name}'`, req));
     } catch (error) {
         res.status(500).send('Błąd podczas pobierania odjazdów dla przystanku');
-        console.log(`Could not fetch departures!`)
+        console.log(constructLog(`Could not fetch departures!`, req));
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.listen(PORT, IP_A, () => {
+    console.log(`Server running on http://${IP_A}:${PORT}`);
 });

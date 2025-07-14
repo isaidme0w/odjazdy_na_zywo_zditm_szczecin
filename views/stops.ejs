@@ -41,7 +41,7 @@
                 <h3 class="mb-3 text-center">Lista przystanków</h3>
                 <div class="list-group">
                     <% stops.forEach(stop => { %>
-                        <a href="/departures/<%= stop.number %>" class="list-group-item list-group-item-action stops"><%= stop.name %> (<%= stop.number %>) <% if (stop.request_stop) { %> <span class="fw-bold">Na żądanie</span> <% } %></a>
+                        <a href="<%= root %>/departures/<%= stop.number %>" class="list-group-item list-group-item-action stops"><%= stop.name %> (<%= stop.number %>) <% if (stop.request_stop) { %> <span class="fw-bold">Na żądanie</span> <% } %></a>
                     <% }) %>
                 <div class="list-group">
             </div>
