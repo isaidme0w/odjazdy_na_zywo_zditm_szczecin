@@ -1,5 +1,6 @@
 const express = require('express');
 const axios = require('axios');
+const path = require("path");
 require('dotenv').config();
 
 const app = express();
@@ -12,6 +13,7 @@ app.locals.root = ROOT_DIR;
 
 app.use(express.json());
 app.use(express.static('public'));
+app.use(`${ROOT_DIR}img`, express.static(path.join(__dirname, "img/")));
 app.set('view engine', 'ejs');
 
 function addZero(i) {
