@@ -68,6 +68,29 @@ app.get(`${ROOT_DIR}departures/:stopNumber`, async (req, res) => {
     }
 });
 
+app.get(`${ROOT_DIR}filterStops`, async (req, res) => {
+    const searchTerm = req.query.searchTerm.toLowerCase();
+    try {
+        const response = await axios.get(`${BASE_URL}/stops`);
+        const filteredStops = response.data.data.filter(stop => stop.name.toLowerCase().includes(searchTerm));
+
+        const stops = filteredStops.map(stop => {
+            const short_number = String(stop.number).slice(-2);
+            return {
+                id: stop.id,
+                number: stop.number,
+                short_number,
+                name: stop.name,
+                request_stop: stop.request_stop
+            };
+        });
+        res.json(stops);
+    } catch(error) {
+        console.log(constructLog(`Could not fetch stops!`, req));
+        res.status(500).send('Błąd podczas pobierania listy przystanków');
+    }
+});
+
 app.listen(PORT, IP_A, () => {
     console.log(`Server running on http://${IP_A}:${PORT}`);
 });
