@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const path = require("path");
+const cron = require('node-cron');
 require('dotenv').config();
 
 const app = express();
@@ -16,6 +17,36 @@ app.use(express.static('public'));
 app.use(`${ROOT_DIR}img`, express.static(path.join(__dirname, "img/")));
 app.set('view engine', 'ejs');
 
+let stops = [];
+
+async function fetchStops() {
+    const d = new Date();
+    try {
+        const response = await axios.get(`${BASE_URL}/stops`);
+        stopsData = {};
+        stops = response.data.data.map(stop => {
+            stopsData[stop.number] = { name: stop.name, request_stop: stop.request_stop };
+            const short_number = String(stop.number).slice(-2);
+            return {
+                id: stop.id,
+                number: stop.number,
+                short_number,
+                name: stop.name,
+                request_stop: stop.request_stop
+            }
+        });
+        console.log(`[${d.getFullYear()}-${addZero(d.getMonth() + 1)}-${addZero(d.getDate())} ${addZero(d.getHours())}:${addZero(d.getMinutes())}:${addZero(d.getSeconds())}] Successfully fetched stops.`);
+    } catch (error) {
+        console.error(`[${d.getFullYear()}-${addZero(d.getMonth() + 1)}-${addZero(d.getDate())} ${addZero(d.getHours())}:${addZero(d.getMinutes())}:${addZero(d.getSeconds())}] Błąd pobierania przystanków`, error.message);
+    }
+}
+
+fetchStops();
+
+cron.schedule('0 4 * * *', () => {
+    fetchStops();
+});
+
 function addZero(i) {
     if (i < 10) {i = "0" + i}
     return i;
@@ -27,27 +58,13 @@ function constructLog(message, req) {
     return "[" + d.getFullYear() + "-" + addZero(d.getMonth() + 1) + "-" + addZero(d.getDate()) + " " + addZero(d.getHours()) + ":" + addZero(d.getMinutes()) + ":" + addZero(d.getSeconds()) + "] (" + ip + ") " + message;
 }
 
-let stopsData = {};
-
 app.get(`${ROOT_DIR}`, async (req, res) => {
     try {
-        const response = await axios.get(`${BASE_URL}/stops`);
-        const stops = response.data.data.map(stop => {
-            stopsData[stop.number] = { name: stop.name, request_stop: stop.request_stop };
-            const short_number = String(stop.number).slice(-2);
-            return {
-                id: stop.id,
-                number: stop.number,
-                short_number,
-                name: stop.name,
-                request_stop: stop.request_stop
-            }
-        });
         res.render('stops', { stops });
-        console.log(constructLog(`Successfuly fetched stops.`, req));
+        console.log(constructLog(`Successfully sent stops`, req));
     } catch (error) {
-        res.status(500).send('Błąd podczas pobierania listy przystanków');
-        console.log(constructLog(`Could not fetch stops!`, req));
+        res.status(500).send('Błąd podczas wyświetlania przystanków');
+        console.log(constructLog(`Error while sending stops`, req));
     }
 });
 
