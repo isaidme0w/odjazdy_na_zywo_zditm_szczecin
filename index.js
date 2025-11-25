@@ -63,7 +63,7 @@ app.get(`${ROOT_DIR}`, async (req, res) => {
     try {
         res.render('stops', { stops });
         let log = constructLog(`Successfully sent stops`, req);
-        const logFilePath = path.join(__dirname, 'logs.txt');
+        const logFilePath = path.join(__dirname, 'stops.log');
         console.log(log);
         fs.appendFile(logFilePath, log + '\n', (err) => {
             if (err) console.error('Błąd zapisu logu do pliku:', err);
