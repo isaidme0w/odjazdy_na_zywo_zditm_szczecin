@@ -63,7 +63,12 @@ function constructLog(message, req) {
 app.get(`${ROOT_DIR}`, async (req, res) => {
     try {
         res.render('stops', { stops });
-        console.log(constructLog(`Successfully sent stops`, req));
+        let log = constructLog(`Successfully sent stops`, req);
+        const logFilePath = path.join(__dirname, 'logs.txt');
+        console.log(log);
+        fs.appendFile(logFilePath, log + '\n', (err) => {
+            if (err) console.error('Błąd zapisu logu do pliku:', err);
+        });
     } catch (error) {
         res.status(500).send('Błąd podczas wyświetlania przystanków');
         console.log(constructLog(`Error while sending stops`, req));
